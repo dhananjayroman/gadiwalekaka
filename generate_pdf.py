@@ -1,0 +1,855 @@
+import os
+import subprocess
+import sys
+
+output_dir = r"c:\Users\dhana\Downloads\Schoolvan-update"
+html_path = os.path.join(output_dir, "School_Van_Documentation.html")
+pdf_path = os.path.join(output_dir, "School_Van_Project_Documentation.pdf")
+user_data_dir = os.path.join(output_dir, ".chrome-pdf-temp")
+
+# Diagram 1: Architecture Diagram SVG
+diag1_svg = """
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 460" width="100%" height="auto" style="max-width: 820px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <linearGradient id="blueCard" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="greenCard" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+    <linearGradient id="amberCard" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="purpleCard" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.1"/>
+    </filter>
+    <marker id="arrowhead" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#475569" />
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#2563eb" />
+    </marker>
+    <marker id="arrowhead-amber" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#d97706" />
+    </marker>
+  </defs>
+
+  <!-- Canvas Box -->
+  <rect x="0" y="0" width="820" height="460" rx="12" fill="url(#bgGrad)" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Layer Labels -->
+  <text x="30" y="32" font-size="14" font-weight="700" fill="#0f172a" letter-spacing="0.5">FRONTEND LAYER (React 19 + Vite)</text>
+  <text x="310" y="32" font-size="14" font-weight="700" fill="#0f172a" letter-spacing="0.5">BACKEND LAYER (Node.js + Express 5)</text>
+  <text x="610" y="32" font-size="14" font-weight="700" fill="#0f172a" letter-spacing="0.5">DATABASE LAYER (MongoDB)</text>
+
+  <!-- 1. Frontend Group -->
+  <rect x="25" y="45" width="240" height="395" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" filter="url(#shadow)"/>
+  
+  <!-- Parent Box -->
+  <rect x="40" y="65" width="210" height="150" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <rect x="40" y="65" width="210" height="30" rx="8" fill="url(#blueCard)"/>
+  <text x="145" y="85" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Student & Parent Portal</text>
+  <text x="50" y="112" font-size="11" fill="#1e3a8a">• User Registration / Login</text>
+  <text x="50" y="130" font-size="11" fill="#1e3a8a">• School Van Admission Form</text>
+  <text x="50" y="148" font-size="11" fill="#1e3a8a">• Student Profile & History</text>
+  <text x="50" y="166" font-size="11" fill="#1e3a8a">• Live Google Maps Van Tracking</text>
+  <text x="50" y="184" font-size="11" fill="#1e3a8a">• Socket.IO Client Listener</text>
+  <rect x="50" y="195" width="190" height="15" rx="3" fill="#dbeafe"/>
+  <text x="145" y="206" font-size="9" font-weight="600" fill="#1d4ed8" text-anchor="middle">Routes: /home, /track-van, /profile</text>
+
+  <!-- Driver Box -->
+  <rect x="40" y="245" width="210" height="175" rx="8" fill="#fef3c7" stroke="#fde68a" stroke-width="1.5"/>
+  <rect x="40" y="245" width="210" height="30" rx="8" fill="url(#amberCard)"/>
+  <text x="145" y="265" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Car Owner / Driver Portal</text>
+  <text x="50" y="292" font-size="11" fill="#78350f">• Owner Authentication</text>
+  <text x="50" y="310" font-size="11" fill="#78350f">• Manage & Delete Admissions</text>
+  <text x="50" y="328" font-size="11" fill="#78350f">• Start / Stop Trip Controls</text>
+  <text x="50" y="346" font-size="11" fill="#78350f">• Device GPS Geolocation Watch</text>
+  <text x="50" y="364" font-size="11" fill="#78350f">• Real-Time Location Broadcaster</text>
+  <rect x="50" y="385" width="190" height="25" rx="3" fill="#fde68a"/>
+  <text x="145" y="396" font-size="9" font-weight="600" fill="#92400e" text-anchor="middle">Routes: /carowner-login</text>
+  <text x="145" y="407" font-size="9" font-weight="600" fill="#92400e" text-anchor="middle">/admissions, /driver-tracking</text>
+
+  <!-- 2. Backend Group -->
+  <rect x="295" y="45" width="270" height="395" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" filter="url(#shadow)"/>
+  
+  <!-- Express REST API -->
+  <rect x="310" y="65" width="240" height="135" rx="8" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.5"/>
+  <rect x="310" y="65" width="240" height="30" rx="8" fill="url(#greenCard)"/>
+  <text x="430" y="85" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Express 5 REST API & Auth</text>
+  <text x="320" y="112" font-size="11" fill="#064e3b">• Passport.js Local Strategy</text>
+  <text x="320" y="130" font-size="11" fill="#064e3b">• /api/auth (Register, Login, Logout)</text>
+  <text x="320" y="148" font-size="11" fill="#064e3b">• /api/admissions (CRUD bookings)</text>
+  <text x="320" y="166" font-size="11" fill="#064e3b">• /api/carowner & /api/contact</text>
+  <text x="320" y="184" font-size="10" font-weight="600" fill="#047857">• Cookie: schoolvan.sid</text>
+
+  <!-- Realtime Socket Server -->
+  <rect x="310" y="220" width="240" height="130" rx="8" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1.5"/>
+  <rect x="310" y="220" width="240" height="30" rx="8" fill="url(#purpleCard)"/>
+  <text x="430" y="240" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Socket.IO Real-Time Engine</text>
+  <text x="320" y="267" font-size="11" fill="#4c1d95">• Event: trip:started</text>
+  <text x="320" y="285" font-size="11" fill="#4c1d95">• Event: van:location:update</text>
+  <text x="320" y="303" font-size="11" fill="#4c1d95">• Event: trip:stopped</text>
+  <text x="320" y="323" font-size="10" font-style="italic" fill="#5b21b6">Bi-directional WebSockets on Port 10000</text>
+
+  <!-- HTTP Server Base -->
+  <rect x="310" y="365" width="240" height="60" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="430" y="386" font-size="11" font-weight="700" fill="#1e293b" text-anchor="middle">Node.js HTTP Server</text>
+  <text x="430" y="405" font-size="10" fill="#64748b" text-anchor="middle">CORS, JSON Body Parser, MongoStore Session</text>
+
+  <!-- 3. Database Group -->
+  <rect x="595" y="45" width="200" height="395" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" filter="url(#shadow)"/>
+  <rect x="605" y="65" width="180" height="30" rx="6" fill="#334155"/>
+  <text x="695" y="85" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">MongoDB Collections</text>
+
+  <!-- Database Cylinders / Collections -->
+  <g transform="translate(615, 110)">
+    <rect x="0" y="0" width="160" height="45" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+    <text x="12" y="20" font-size="11" font-weight="700" fill="#0f172a">userregisters</text>
+    <text x="12" y="35" font-size="9" fill="#64748b">name, email, hashPass, phone</text>
+  </g>
+  <g transform="translate(615, 165)">
+    <rect x="0" y="0" width="160" height="45" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+    <text x="12" y="20" font-size="11" font-weight="700" fill="#0f172a">admissions</text>
+    <text x="12" y="35" font-size="9" fill="#64748b">student, school, time, address</text>
+  </g>
+  <g transform="translate(615, 220)">
+    <rect x="0" y="0" width="160" height="55" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+    <text x="12" y="18" font-size="11" font-weight="700" fill="#1e40af">vanlocations</text>
+    <text x="12" y="32" font-size="9" fill="#3b82f6">lat, lng, speed, heading</text>
+    <text x="12" y="45" font-size="9" font-weight="600" fill="#1d4ed8">tripStatus: ACTIVE/STOPPED</text>
+  </g>
+  <g transform="translate(615, 285)">
+    <rect x="0" y="0" width="160" height="45" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+    <text x="12" y="20" font-size="11" font-weight="700" fill="#0f172a">carowners</text>
+    <text x="12" y="35" font-size="9" fill="#64748b">email, hashPass (default owner)</text>
+  </g>
+  <g transform="translate(615, 340)">
+    <rect x="0" y="0" width="160" height="40" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+    <text x="12" y="18" font-size="11" font-weight="700" fill="#0f172a">sessions</text>
+    <text x="12" y="32" font-size="9" fill="#64748b">Persistent MongoStore sessions</text>
+  </g>
+  <g transform="translate(615, 390)">
+    <rect x="0" y="0" width="160" height="35" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+    <text x="12" y="18" font-size="11" font-weight="700" fill="#0f172a">contacts & loginlogs</text>
+    <text x="12" y="30" font-size="9" fill="#64748b">Inquiries and audit logs</text>
+  </g>
+
+  <!-- Connectors -->
+  <!-- Parent -> Express API -->
+  <path d="M 250 120 L 310 120" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowhead-blue)"/>
+  <!-- Driver -> Express API -->
+  <path d="M 250 280 L 290 280 L 290 150 L 310 150" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#arrowhead-amber)"/>
+  <!-- Driver GPS -> Socket/API -->
+  <path d="M 250 350 L 310 300" stroke="#d97706" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrowhead-amber)"/>
+  <!-- Socket -> Parent -->
+  <path d="M 310 260 L 280 260 L 280 180 L 250 180" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrowhead)"/>
+  
+  <!-- Express & Socket -> DB -->
+  <path d="M 550 135 L 615 135" stroke="#059669" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M 550 270 L 615 250" stroke="#059669" stroke-width="2" marker-end="url(#arrowhead)"/>
+</svg>
+"""
+
+# Diagram 2: Admission Flow SVG
+diag2_svg = """
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 440" width="100%" height="auto" style="max-width: 820px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <marker id="seq-arrow" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#2563eb" />
+    </marker>
+    <marker id="seq-arrow-green" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#16a34a" />
+    </marker>
+    <marker id="seq-arrow-amber" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#d97706" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="820" height="440" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Lifelines Headers -->
+  <g transform="translate(40, 20)">
+    <rect x="0" y="0" width="120" height="36" rx="6" fill="#2563eb"/>
+    <text x="60" y="22" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Student / Parent</text>
+    <line x1="60" y1="36" x2="60" y2="400" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+  <g transform="translate(200, 20)">
+    <rect x="0" y="0" width="120" height="36" rx="6" fill="#0284c7"/>
+    <text x="60" y="22" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">React Frontend</text>
+    <line x1="60" y1="36" x2="60" y2="400" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+  <g transform="translate(360, 20)">
+    <rect x="0" y="0" width="130" height="36" rx="6" fill="#16a34a"/>
+    <text x="65" y="22" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Express Backend</text>
+    <line x1="65" y1="36" x2="65" y2="400" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+  <g transform="translate(530, 20)">
+    <rect x="0" y="0" width="110" height="36" rx="6" fill="#475569"/>
+    <text x="55" y="22" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">MongoDB</text>
+    <line x1="55" y1="36" x2="55" y2="400" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+  <g transform="translate(680, 20)">
+    <rect x="0" y="0" width="110" height="36" rx="6" fill="#d97706"/>
+    <text x="55" y="22" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Car Owner</text>
+    <line x1="55" y1="36" x2="55" y2="400" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+
+  <!-- Step 1: Register / Login -->
+  <line x1="100" y1="80" x2="260" y2="80" stroke="#2563eb" stroke-width="1.5" marker-end="url(#seq-arrow)"/>
+  <text x="180" y="74" font-size="10" font-weight="600" fill="#1e40af" text-anchor="middle">1. Register / Login Form Submit</text>
+
+  <line x1="260" y1="105" x2="425" y2="105" stroke="#2563eb" stroke-width="1.5" marker-end="url(#seq-arrow)"/>
+  <text x="342" y="99" font-size="10" font-weight="600" fill="#1e40af" text-anchor="middle">2. POST /api/auth/register</text>
+
+  <line x1="425" y1="125" x2="585" y2="125" stroke="#16a34a" stroke-width="1.5" marker-end="url(#seq-arrow-green)"/>
+  <text x="505" y="119" font-size="9" fill="#166534" text-anchor="middle">3. Hash bcrypt password & save User</text>
+
+  <line x1="425" y1="145" x2="260" y2="145" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#seq-arrow)"/>
+  <text x="342" y="140" font-size="9" fill="#475569" text-anchor="middle">4. Set Cookie: schoolvan.sid (200 OK)</text>
+
+  <!-- Step 2: Van Admission -->
+  <line x1="100" y1="180" x2="260" y2="180" stroke="#2563eb" stroke-width="1.5" marker-end="url(#seq-arrow)"/>
+  <text x="180" y="174" font-size="10" font-weight="600" fill="#1e40af" text-anchor="middle">5. Fill Admission Details (School, Class, Address)</text>
+
+  <line x1="260" y1="205" x2="425" y2="205" stroke="#2563eb" stroke-width="1.5" marker-end="url(#seq-arrow)"/>
+  <text x="342" y="199" font-size="10" font-weight="600" fill="#1e40af" text-anchor="middle">6. POST /api/admissions</text>
+
+  <line x1="425" y1="230" x2="585" y2="230" stroke="#16a34a" stroke-width="1.5" marker-end="url(#seq-arrow-green)"/>
+  <text x="505" y="224" font-size="9" fill="#166534" text-anchor="middle">7. Insert Admission Record</text>
+
+  <line x1="425" y1="250" x2="260" y2="250" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#seq-arrow)"/>
+  <text x="342" y="244" font-size="9" fill="#475569" text-anchor="middle">8. 201 Created (Admission Saved)</text>
+
+  <line x1="260" y1="270" x2="100" y2="270" stroke="#16a34a" stroke-width="1.5" marker-end="url(#seq-arrow-green)"/>
+  <text x="180" y="265" font-size="9" font-weight="600" fill="#15803d" text-anchor="middle">9. SweetAlert2 Success Confirmation</text>
+
+  <!-- Step 3: Owner Reviews Admissions -->
+  <line x1="735" y1="310" x2="260" y2="310" stroke="#d97706" stroke-width="1.5" marker-end="url(#seq-arrow-amber)"/>
+  <text x="500" y="304" font-size="10" font-weight="600" fill="#b45309" text-anchor="middle">10. Owner Logs In & Views /admissions page</text>
+
+  <line x1="260" y1="335" x2="425" y2="335" stroke="#d97706" stroke-width="1.5" marker-end="url(#seq-arrow-amber)"/>
+  <text x="342" y="329" font-size="10" font-weight="600" fill="#b45309" text-anchor="middle">11. GET /api/admissions</text>
+
+  <line x1="425" y1="355" x2="585" y2="355" stroke="#16a34a" stroke-width="1.5" marker-end="url(#seq-arrow-green)"/>
+  <text x="505" y="349" font-size="9" fill="#166534" text-anchor="middle">12. Query Admission.find()</text>
+
+  <line x1="585" y1="375" x2="425" y2="375" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#seq-arrow)"/>
+  <text x="505" y="370" font-size="9" fill="#475569" text-anchor="middle">13. Return admissions documents</text>
+
+  <line x1="425" y1="395" x2="735" y2="395" stroke="#16a34a" stroke-width="1.5" marker-end="url(#seq-arrow-green)"/>
+  <text x="580" y="390" font-size="9" font-weight="600" fill="#15803d" text-anchor="middle">14. Render Interactive Table (View / Delete)</text>
+</svg>
+"""
+
+# Diagram 3: Tracking Sequence SVG
+diag3_svg = """
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 460" width="100%" height="auto" style="max-width: 820px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <marker id="tr-arrow-blue" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#2563eb" />
+    </marker>
+    <marker id="tr-arrow-amber" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#d97706" />
+    </marker>
+    <marker id="tr-arrow-purple" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#7c3aed" />
+    </marker>
+    <marker id="tr-arrow-green" markerWidth="9" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 9 3, 0 6" fill="#16a34a" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="820" height="460" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Lifelines Headers -->
+  <g transform="translate(30, 20)">
+    <rect x="0" y="0" width="120" height="36" rx="6" fill="#d97706"/>
+    <text x="60" y="22" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Driver (Owner)</text>
+    <line x1="60" y1="36" x2="60" y2="420" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+  <g transform="translate(180, 20)">
+    <rect x="0" y="0" width="130" height="36" rx="6" fill="#b45309"/>
+    <text x="65" y="22" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">DriverTracking.jsx</text>
+    <line x1="65" y1="36" x2="65" y2="420" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+  <g transform="translate(340, 20)">
+    <rect x="0" y="0" width="140" height="36" rx="6" fill="#7c3aed"/>
+    <text x="70" y="22" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Express + Socket.IO</text>
+    <line x1="70" y1="36" x2="70" y2="420" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+  <g transform="translate(510, 20)">
+    <rect x="0" y="0" width="100" height="36" rx="6" fill="#475569"/>
+    <text x="50" y="22" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">MongoDB</text>
+    <line x1="50" y1="36" x2="50" y2="420" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+  <g transform="translate(640, 20)">
+    <rect x="0" y="0" width="150" height="36" rx="6" fill="#2563eb"/>
+    <text x="75" y="22" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">TrackVan.jsx (Parent UI)</text>
+    <line x1="75" y1="36" x2="75" y2="420" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4"/>
+  </g>
+
+  <!-- Step 1: Parent Connects -->
+  <line x1="715" y1="75" x2="410" y2="75" stroke="#2563eb" stroke-width="1.5" marker-end="url(#tr-arrow-blue)"/>
+  <text x="560" y="68" font-size="10" font-weight="600" fill="#1e40af" text-anchor="middle">1. Connect Socket.IO & GET /api/tracking/current</text>
+
+  <line x1="410" y1="95" x2="560" y2="95" stroke="#64748b" stroke-width="1.5" marker-end="url(#tr-arrow-blue)"/>
+  <text x="485" y="89" font-size="9" fill="#475569" text-anchor="middle">2. Find VanLocation</text>
+
+  <line x1="410" y1="115" x2="715" y2="115" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="3" marker-end="url(#tr-arrow-blue)"/>
+  <text x="560" y="109" font-size="9" fill="#1e40af" text-anchor="middle">3. Return initial coordinates & trip status</text>
+
+  <!-- Step 2: Driver Starts Trip -->
+  <line x1="90" y1="145" x2="245" y2="145" stroke="#d97706" stroke-width="1.5" marker-end="url(#tr-arrow-amber)"/>
+  <text x="165" y="139" font-size="10" font-weight="600" fill="#b45309" text-anchor="middle">4. Click "Start Trip"</text>
+
+  <line x1="245" y1="165" x2="410" y2="165" stroke="#d97706" stroke-width="1.5" marker-end="url(#tr-arrow-amber)"/>
+  <text x="325" y="159" font-size="10" font-weight="600" fill="#b45309" text-anchor="middle">5. POST /api/tracking/start</text>
+
+  <line x1="410" y1="185" x2="560" y2="185" stroke="#16a34a" stroke-width="1.5" marker-end="url(#tr-arrow-green)"/>
+  <text x="485" y="179" font-size="9" fill="#166534" text-anchor="middle">6. Set tripStatus = "ACTIVE"</text>
+
+  <line x1="410" y1="205" x2="715" y2="205" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#tr-arrow-purple)"/>
+  <text x="560" y="199" font-size="10" font-weight="700" fill="#6d28d9" text-anchor="middle">7. io.emit("trip:started", van)</text>
+
+  <!-- Step 3: Loop Location Updates -->
+  <rect x="20" y="225" width="780" height="115" rx="6" fill="#faf5ff" stroke="#c084fc" stroke-width="1" stroke-dasharray="4"/>
+  <text x="35" y="242" font-size="10" font-weight="700" fill="#7e22ce">LOOP: Continuous GPS Telemetry (Driver in Transit)</text>
+
+  <line x1="90" y1="260" x2="245" y2="260" stroke="#d97706" stroke-width="1.5" marker-end="url(#tr-arrow-amber)"/>
+  <text x="165" y="254" font-size="9" fill="#92400e" text-anchor="middle">8. HTML5 Geolocation coords</text>
+
+  <line x1="245" y1="280" x2="410" y2="280" stroke="#d97706" stroke-width="1.5" marker-end="url(#tr-arrow-amber)"/>
+  <text x="325" y="274" font-size="9" font-weight="600" fill="#b45309" text-anchor="middle">9. POST /api/tracking/location (lat, lng, speed, heading)</text>
+
+  <line x1="410" y1="295" x2="560" y2="295" stroke="#16a34a" stroke-width="1.5" marker-end="url(#tr-arrow-green)"/>
+  <text x="485" y="290" font-size="9" fill="#166534" text-anchor="middle">10. van.save()</text>
+
+  <line x1="410" y1="315" x2="715" y2="315" stroke="#7c3aed" stroke-width="2" marker-end="url(#tr-arrow-purple)"/>
+  <text x="560" y="310" font-size="10" font-weight="700" fill="#6d28d9" text-anchor="middle">11. io.emit("van:location:update", van)</text>
+
+  <line x1="715" y1="330" x2="745" y2="330" stroke="#2563eb" stroke-width="1.5"/>
+  <line x1="745" y1="330" x2="745" y2="340" stroke="#2563eb" stroke-width="1.5"/>
+  <line x1="745" y1="340" x2="715" y2="340" stroke="#2563eb" stroke-width="1.5" marker-end="url(#tr-arrow-blue)"/>
+  <text x="755" y="338" font-size="8" font-weight="600" fill="#1d4ed8">Animate Van Marker on Google Maps</text>
+
+  <!-- Step 4: Driver Stops Trip -->
+  <line x1="90" y1="370" x2="245" y2="370" stroke="#d97706" stroke-width="1.5" marker-end="url(#tr-arrow-amber)"/>
+  <text x="165" y="364" font-size="10" font-weight="600" fill="#b45309" text-anchor="middle">12. Click "Stop Trip"</text>
+
+  <line x1="245" y1="390" x2="410" y2="390" stroke="#d97706" stroke-width="1.5" marker-end="url(#tr-arrow-amber)"/>
+  <text x="325" y="384" font-size="10" font-weight="600" fill="#b45309" text-anchor="middle">13. POST /api/tracking/stop</text>
+
+  <line x1="410" y1="405" x2="560" y2="405" stroke="#16a34a" stroke-width="1.5" marker-end="url(#tr-arrow-green)"/>
+  <text x="485" y="400" font-size="9" fill="#166534" text-anchor="middle">14. Set tripStatus = "STOPPED"</text>
+
+  <line x1="410" y1="420" x2="715" y2="420" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#tr-arrow-purple)"/>
+  <text x="560" y="415" font-size="10" font-weight="700" fill="#6d28d9" text-anchor="middle">15. io.emit("trip:stopped", van)</text>
+</svg>
+"""
+
+html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>School Van Booking & Live Tracking System - Technical Documentation</title>
+  <style>
+    @page {{
+      size: A4;
+      margin: 16mm 14mm 16mm 14mm;
+    }}
+    * {{
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }}
+    body {{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      background: #ffffff;
+      line-height: 1.5;
+      font-size: 10.5pt;
+      margin: 0;
+      padding: 0;
+    }}
+    
+    .page-break {{
+      page-break-after: always;
+      break-after: page;
+    }}
+    .avoid-break {{
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }}
+
+    /* Cover Header */
+    .cover {{
+      border-bottom: 3px solid #2563eb;
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+    }}
+    .badge {{
+      display: inline-block;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 8.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }}
+    h1 {{
+      font-size: 22pt;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 4px 0 8px 0;
+      line-height: 1.2;
+    }}
+    .subtitle {{
+      font-size: 11.5pt;
+      color: #475569;
+      margin: 0 0 14px 0;
+    }}
+    .meta-grid {{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 8.5pt;
+    }}
+    .meta-item strong {{
+      display: block;
+      color: #64748b;
+      font-size: 7.5pt;
+      text-transform: uppercase;
+    }}
+    .meta-item span {{
+      color: #0f172a;
+      font-weight: 600;
+    }}
+
+    /* Headings */
+    h2 {{
+      font-size: 13.5pt;
+      font-weight: 700;
+      color: #0f172a;
+      border-bottom: 1.5px solid #e2e8f0;
+      padding-bottom: 5px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }}
+    h2::before {{
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      background: #2563eb;
+      border-radius: 2px;
+    }}
+    h3 {{
+      font-size: 11pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }}
+    p {{
+      margin: 0 0 10px 0;
+      color: #334155;
+      text-align: justify;
+    }}
+
+    /* Diagrams Containers */
+    .diagram-card {{
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 12px 0 16px 0;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }}
+    .diagram-caption {{
+      font-size: 8.5pt;
+      color: #64748b;
+      font-weight: 600;
+      margin-top: 6px;
+    }}
+
+    /* Tables */
+    table {{
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px 0;
+      font-size: 8.5pt;
+    }}
+    th {{
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+      text-align: left;
+      padding: 7px 10px;
+      border: 1px solid #cbd5e1;
+    }}
+    td {{
+      padding: 6px 10px;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      vertical-align: top;
+    }}
+    tr:nth-child(even) td {{
+      background: #f8fafc;
+    }}
+    code {{
+      font-family: Consolas, "Courier New", monospace;
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 1px 4px;
+      border-radius: 4px;
+      font-size: 8pt;
+    }}
+
+    /* Callout Card */
+    .callout {{
+      background: #f0fdf4;
+      border-left: 3.5px solid #16a34a;
+      border-radius: 0 6px 6px 0;
+      padding: 8px 12px;
+      margin: 10px 0;
+      font-size: 9pt;
+      color: #166534;
+    }}
+    .callout strong {{
+      color: #14532d;
+    }}
+
+    /* Role Cards */
+    .role-grid {{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 10px 0;
+    }}
+    .role-card {{
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px 12px;
+      background: #fafafa;
+    }}
+    .role-card.student {{
+      border-top: 3px solid #2563eb;
+    }}
+    .role-card.owner {{
+      border-top: 3px solid #d97706;
+    }}
+    .role-card h4 {{
+      margin: 0 0 6px 0;
+      font-size: 10pt;
+      color: #0f172a;
+    }}
+    .role-card ul {{
+      margin: 0;
+      padding-left: 16px;
+      font-size: 8.5pt;
+      color: #475569;
+    }}
+    .role-card li {{
+      margin-bottom: 3px;
+    }}
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1: TITLE & EXECUTIVE SUMMARY -->
+  <div class="cover">
+    <div class="badge">Official Technical Documentation</div>
+    <h1>School Van Booking & Live GPS Tracking System</h1>
+    <div class="subtitle">Complete Architectural Specification, Real-Time Data Pipeline & Workflow Reference</div>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <strong>Application Stack</strong>
+        <span>MERN + Socket.IO</span>
+      </div>
+      <div class="meta-item">
+        <strong>Frontend</strong>
+        <span>React 19 & Vite 6</span>
+      </div>
+      <div class="meta-item">
+        <strong>Backend Server</strong>
+        <span>Express 5 & Node.js</span>
+      </div>
+      <div class="meta-item">
+        <strong>Database</strong>
+        <span>MongoDB (Mongoose 8)</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>1. Executive Summary & Project Purpose</h2>
+  <p>
+    The <strong>School Van Booking & Live Tracking System</strong> is an end-to-end full-stack web platform built to solve two crucial challenges in student transportation: streamlined <strong>van admission management</strong> and <strong>real-time GPS telemetry</strong>. Parents and students can register, view available school van services, submit admission forms for dedicated routes, and track the van's live movement on interactive Google Maps while in transit. Concurrently, car owners and drivers receive an authenticated dashboard to oversee admissions and operate a real-time driver tracking console that continuously broadcasts device coordinates via WebSockets.
+  </p>
+
+  <div class="role-grid avoid-break">
+    <div class="role-card student">
+      <h4>Student / Parent Portal</h4>
+      <ul>
+        <li><strong>User Authentication:</strong> Secure sign-up/login with hashed passwords and session management.</li>
+        <li><strong>Admission Booking:</strong> Apply for transport with student name, class, home address, and school timings.</li>
+        <li><strong>Live Google Maps:</strong> Real-time animated marker moving dynamically as the driver travels.</li>
+        <li><strong>Status Feeds:</strong> Immediate alerts when trip is started, in progress, or stopped.</li>
+      </ul>
+    </div>
+    <div class="role-card owner">
+      <h4>Car Owner / Driver Portal</h4>
+      <ul>
+        <li><strong>Dedicated Owner Login:</strong> Secure gatekeeper for administrative actions.</li>
+        <li><strong>Admissions Dashboard:</strong> Centralized table to inspect, verify, and delete student requests.</li>
+        <li><strong>Driver Tracking Console:</strong> HTML5 Geolocation tracking engine with Start/Stop controls.</li>
+        <li><strong>Telemetry Broadcast:</strong> Streams latitude, longitude, speed, and heading over Socket.IO.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>2. System Architecture</h2>
+  <p>
+    The system follows a reactive three-tier architecture: the React Single Page Application (SPA), the Node.js Express API with Socket.IO WebSocket server, and the MongoDB database with persistent session store.
+  </p>
+
+  <div class="diagram-card avoid-break">
+    {diag1_svg}
+    <div class="diagram-caption">Figure 1: Full-Stack System Architecture and Inter-Service Communication Flow</div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PAGE 2: WORKFLOWS AND SEQUENCE DIAGRAMS -->
+  <h2>3. Core Workflow: Admission & Van Booking</h2>
+  <p>
+    The admission lifecycle begins when a student or parent registers on the platform. Once authenticated via Passport.js, the user submits the student's details, home address, and school information. This data is validated and persisted in the MongoDB <code>admissions</code> collection. The car owner can inspect incoming applications in real time from their administrative dashboard.
+  </p>
+
+  <div class="diagram-card avoid-break">
+    {diag2_svg}
+    <div class="diagram-caption">Figure 2: Sequence Diagram for Student Registration and Van Admission Workflow</div>
+  </div>
+
+  <h2>4. Core Workflow: Real-Time Live GPS Telemetry</h2>
+  <p>
+    The tracking engine combines the browser <strong>HTML5 Geolocation API</strong> on the driver's device, an <strong>Express REST endpoint</strong> for persistence, and a <strong>Socket.IO engine</strong> for sub-second broadcasting to all connected parents viewing Google Maps.
+  </p>
+
+  <div class="diagram-card avoid-break">
+    {diag3_svg}
+    <div class="diagram-caption">Figure 3: Sequence Diagram for Real-Time Van GPS Tracking Pipeline</div>
+  </div>
+
+  <div class="callout avoid-break">
+    <strong>Fault Tolerance:</strong> When a parent loads <code>TrackVan.jsx</code>, the client first performs an HTTP <code>GET /api/tracking/current</code> to retrieve the latest known coordinates and trip status, ensuring the map renders correctly even before the next live GPS packet is broadcast.
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PAGE 3: DATA MODELS, REST APIS & DIRECTORY STRUCTURE -->
+  <h2>5. MongoDB Schemas & Data Architecture</h2>
+  <p>The database layer utilizes Mongoose with structured schemas for reliable data persistence:</p>
+
+  <table class="avoid-break">
+    <thead>
+      <tr>
+        <th style="width: 22%;">Collection / Model</th>
+        <th style="width: 38%;">Key Fields</th>
+        <th style="width: 40%;">Description & Business Logic</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>User</strong> (<code>userregisters</code>)</td>
+        <td><code>fullName</code>, <code>parentPhone</code>, <code>email</code>, <code>password</code> (bcrypt hashed)</td>
+        <td>Stores registered students and parents. Auto-logged in upon registration using Passport.js.</td>
+      </tr>
+      <tr>
+        <td><strong>CarOwner</strong> (<code>carowners</code>)</td>
+        <td><code>email</code>, <code>password</code> (bcrypt hashed)</td>
+        <td>Administrative accounts for vehicle owners. Seeded automatically on server start with <code>owner@gmail.com</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>Admission</strong> (<code>admissions</code>)</td>
+        <td><code>studentName</code>, <code>studentClass</code>, <code>studentAddress</code>, <code>studentContact</code>, <code>schoolName</code>, <code>schoolTime</code>, <code>submittedBy</code></td>
+        <td>Captures all student transport registration forms. Queried and managed by the car owner dashboard.</td>
+      </tr>
+      <tr>
+        <td><strong>VanLocation</strong> (<code>vanlocations</code>)</td>
+        <td><code>latitude</code>, <code>longitude</code>, <code>accuracy</code>, <code>speed</code>, <code>heading</code>, <code>tripStatus</code>, <code>lastUpdated</code>, <code>startedAt</code>, <code>stoppedAt</code></td>
+        <td>Singleton tracking state for the school van. <code>tripStatus</code> is enum: <code>NOT_STARTED</code>, <code>ACTIVE</code>, or <code>STOPPED</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>Session</strong> (<code>sessions</code>)</td>
+        <td><code>_id</code>, <code>session</code>, <code>expires</code></td>
+        <td>Managed via <code>connect-mongo</code> for persistent user sessions across server restarts.</td>
+      </tr>
+      <tr>
+        <td><strong>Contact & LoginLog</strong></td>
+        <td><code>name</code>, <code>email</code>, <code>message</code>, <code>timestamp</code></td>
+        <td>Audit log of logins and contact form submissions from prospective students and parents.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6. REST API Endpoints Specification</h2>
+  <table class="avoid-break">
+    <thead>
+      <tr>
+        <th style="width: 12%;">Method</th>
+        <th style="width: 28%;">Endpoint</th>
+        <th style="width: 25%;">Access / Auth</th>
+        <th style="width: 35%;">Purpose & Response</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>POST</code></td>
+        <td><code>/api/auth/register</code></td>
+        <td>Public</td>
+        <td>Registers student, hashes password with bcrypt, initializes session.</td>
+      </tr>
+      <tr>
+        <td><code>POST</code></td>
+        <td><code>/api/auth/login</code></td>
+        <td>Public</td>
+        <td>Authenticates student via Passport Local Strategy.</td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/auth/logout</code></td>
+        <td>Student Session</td>
+        <td>Terminates session and clears <code>schoolvan.sid</code> cookie.</td>
+      </tr>
+      <tr>
+        <td><code>POST</code></td>
+        <td><code>/api/carowner/login</code></td>
+        <td>Public</td>
+        <td>Authenticates car owner credentials for admin portal access.</td>
+      </tr>
+      <tr>
+        <td><code>POST</code></td>
+        <td><code>/api/admissions</code></td>
+        <td>Student Session</td>
+        <td>Submits new student van admission application.</td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/admissions</code></td>
+        <td>Car Owner Session</td>
+        <td>Retrieves all student admission requests for management table.</td>
+      </tr>
+      <tr>
+        <td><code>DELETE</code></td>
+        <td><code>/api/admissions/:id</code></td>
+        <td>Car Owner Session</td>
+        <td>Deletes or cancels a specific student admission application.</td>
+      </tr>
+      <tr>
+        <td><code>POST</code></td>
+        <td><code>/api/tracking/start</code></td>
+        <td>Car Owner / Driver</td>
+        <td>Sets tripStatus to <code>ACTIVE</code>; emits <code>trip:started</code> via Socket.IO.</td>
+      </tr>
+      <tr>
+        <td><code>POST</code></td>
+        <td><code>/api/tracking/location</code></td>
+        <td>Car Owner / Driver</td>
+        <td>Saves GPS telemetry; emits <code>van:location:update</code> to all listeners.</td>
+      </tr>
+      <tr>
+        <td><code>POST</code></td>
+        <td><code>/api/tracking/stop</code></td>
+        <td>Car Owner / Driver</td>
+        <td>Sets tripStatus to <code>STOPPED</code>; emits <code>trip:stopped</code> via Socket.IO.</td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/tracking/current</code></td>
+        <td>Public / Protected</td>
+        <td>Returns latest van location and active trip state.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>7. Project Organization & Source Code Structure</h2>
+  <div class="avoid-break" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; font-size: 8pt; font-family: Consolas, monospace; line-height: 1.45;">
+    <div><strong>Schoolvan-update/</strong></div>
+    <div style="padding-left: 14px;">├── <strong>schoolvan-backend-main/</strong></div>
+    <div style="padding-left: 28px;">├── config/ (db.js, passport.js)</div>
+    <div style="padding-left: 28px;">├── controllers/ (admissionController.js, authController.js, trackingController.js, carOwnerController.js)</div>
+    <div style="padding-left: 28px;">├── models/ (Admission.js, CarOwner.js, Contact.js, LoginLog.js, User.js, VanLocation.js)</div>
+    <div style="padding-left: 28px;">├── routes/ (AdmissionRoutes.js, CarOwnerRoutes.js, ContactRoutes.js, TrackingRoutes.js, UserRoutes.js)</div>
+    <div style="padding-left: 28px;">├── app.js (Server entry, CORS, Socket.IO, Session Store, DB Seeder)</div>
+    <div style="padding-left: 28px;">└── package.json (Express 5, Mongoose 8, Socket.IO 4, Passport, Bcrypt)</div>
+    <div style="padding-left: 14px;">└── <strong>schoolvan-frontend-main/</strong></div>
+    <div style="padding-left: 28px;">├── src/</div>
+    <div style="padding-left: 42px;">├── components/Layout/ (Layout.jsx, Navbar.jsx, Footer.jsx)</div>
+    <div style="padding-left: 42px;">├── components/pages/</div>
+    <div style="padding-left: 56px;">├── TrackVan.jsx (Google Maps API + Real-time Socket.IO live marker)</div>
+    <div style="padding-left: 56px;">├── DriverTracking.jsx (Driver trip start/stop & continuous GPS broadcaster)</div>
+    <div style="padding-left: 56px;">├── AdmissionPage.jsx & ViewAdmissions.jsx (Booking submit & Admin table)</div>
+    <div style="padding-left: 56px;">├── Login.jsx, Registration.jsx & CarOwnerLogin.jsx (Auth interfaces)</div>
+    <div style="padding-left: 56px;">└── Home.jsx, School.jsx, Vehicle.jsx, Rules.jsx, Contact.jsx</div>
+    <div style="padding-left: 42px;">└── App.jsx (React Router v7 route hierarchy, ProtectedRoute, Suspense)</div>
+    <div style="padding-left: 28px;">└── package.json (React 19, Tailwind CSS 4, Framer Motion 12, Google Maps API)</div>
+  </div>
+
+</body>
+</html>
+"""
+
+with open(html_path, "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print(f"HTML written to {html_path}")
+
+# Run Chrome Headless to generate PDF
+chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+os.makedirs(user_data_dir, exist_ok=True)
+
+cmd = [
+    chrome_path,
+    "--headless=new",
+    "--disable-gpu",
+    "--no-sandbox",
+    f"--user-data-dir={user_data_dir}",
+    f"--print-to-pdf={pdf_path}",
+    html_path
+]
+
+print("Running Chrome to generate PDF...")
+proc = subprocess.run(cmd, capture_output=True, text=True)
+print("Chrome Returncode:", proc.returncode)
+
+if os.path.exists(pdf_path):
+    print(f"PDF Successfully created at: {pdf_path} (Size: {os.path.getsize(pdf_path)} bytes)")
+else:
+    print("PDF generation failed.")
+    print("Stderr:", proc.stderr)
